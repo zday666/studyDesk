@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+  <script>
+    /* --------基本API */
+    /* //使用数组初始化集合
+    const s1 = new Set(["val1", "val2", "val3"]);
+    console.log(s1.size); //3
+    //使用自定义迭代器初始化集合
+    const s2 = new Set({
+      [Symbol.iterator]: function* () {
+        yield "val1";
+        yield "val2";
+        yield "val3";
+      },
+    });
+    console.log(s2.size); //3 */
+
+    /* //初始化后，可使用add()增加值，使用has()查询，使用delete()\clear()删除元素
+    //add()返回集合的实例，所以可以将多个添加操作连缀起来，包括初始化
+    const s = new Set().add("zz");
+    console.log(s.has("Matt"));
+    console.log(s.size);
+    s.add("Matt").add("Frisbie");
+    console.log(s.has("Matt"));
+    console.log(s.size);
+    s.delete("Matt");
+    console.log(s.has("Matt"));
+    console.log(s.has("Frisbie"));
+    console.log(s.size);
+    s.clear(); //销毁集合实例的所有值
+    console.log(s.has("Matt"));
+    console.log(s.has("Frisbie"));
+    console.log(s.size); */
+
+    /* //严格相等
+    const s = new Set();
+    const functionVal = function () {};
+    const symbolVal = Symbol();
+    const objectVal = new Object();
+    s.add(functionVal);
+    s.add(symbolVal);
+    s.add(objectVal);
+    console.log(s.has(functionVal)); //true
+    console.log(s.has(symbolVal)); //true
+    console.log(s.has(objectVal)); //true
+
+    //SameValueZero检查意味着独立的实例不会冲突
+    //SameValueZero--->ECMAScript 内部定义，无法在语言中使用
+    console.log(s.has(function () {})); //false */
+
+    /* //与严格相等一样，用作值的对象和其他“集合”类型在自己的内容或属性被修改时也不会改变
+    const s = new Set();
+    const objVal = {},
+      arrVal = [];
+    s.add(objVal);
+    s.add(arrVal);
+
+    objVal.bar = "bar";
+    arrVal.push("bar");
+    console.log(s.has(objVal)); //true
+    console.log(s.has(arrVal)); //true */
+
+    /* //add()和delete()操作是幂等的。delete()返回一个布尔值，表示集合中是否存在要删除的值
+    const s = new Set();
+    s.add("foo");
+    console.log(s.size); //1
+    s.add("foo");
+    console.log(s.size); //1
+    //集合里有这个值
+    console.log(s.delete("foo")); //true
+    //集合里没有这个值
+    console.log(s.delete("foo")); //false */
+
+    /* ----------顺序与迭代------- */
+    /* //Set会维护值插入时的顺序-->支持按顺序迭代
+    const s = new Set(["val1", "val2", "val3"]);
+    console.log(s.values === s[Symbol.iterator]); //true
+    console.log(s.keys === s[Symbol.iterator]); //true
+    for (let value of s.values()) {
+      console.log(value);
+    }
+    // val1
+    // val2
+    // val3
+    for (let value of s.keys()) {
+      console.log(value);
+    }
+    // val1
+    // val2
+    // val3
+    for (let value of s[Symbol.iterator]()) {
+      console.log(value);
+    }
+    // val1
+    // val2
+    // val3 */
+
+    /* //集合的 entries()方法返回一个迭代器，可以按照插入顺序产生包含两个元素的数组，这两个元
+    //素是集合中每个值的重复出现
+    const s = new Set(["val1", "val2", "val3"]);
+    for (let pair of s.entries()) {
+      console.log(pair);
+    }
+    // ["val1", "val1"]
+    // ["val2", "val2"]
+    // ["val3", "val3"] */
+
+    /* const s = new Set(["val1", "val2", "val3"]);
+    s.forEach((val, dupVal) => console.log(`${val} -> ${dupVal}`));
+    // val1 -> val1
+    // val2 -> val2
+    // val3 -> val3 */
+
+    /* //修改集合中值的属性不会影响其作为集合值的身份
+    const s1 = new Set(["val1"]);
+    //字符串原始值作为值不会被修改
+    for (let value of s1.values()) {
+      value = "newval";
+      console.log(value); // newVal
+      console.log(s1.has("val1")); // true
+    }
+    const valObj = { id: 1 };
+    const s2 = new Set([valObj]);
+    //修改值对象的属性，但对象仍然存在于集合中
+    for (let value of s2.values()) {
+      value.id = "newVal";
+      console.log(value); // {id: "newVal"}
+      console.log(s2.has(valObj)); // true
+    }
+    console.log(valObj); // {id: "newVal"} */
+
+    /* ----------定义正式集合操作----------- */
+    /* class XSet extends Set() {
+      union(...sets) {
+        return XSet.union(this, ...sets);
+      }
+      intersection(...sets) {
+        return XSet.intersection(this, ...sets);
+      }
+      difference(set) {
+        return XSet.difference(this, set);
+      }
+      symmertricDifference(set) {
+        return XSet.cartesianProduct(this, set);
+      }
+      powerSet() {
+        return XSet.powerSet(this);
+      }
+      //返回两个或更多集合的并集
+      static union(a, ...bSets) {
+        const unionSet = new XSet(a);
+        for (const b of bSets) {
+          for (const b of bSets) {
+            unionSet.add(bValue);
+          }
+        }
+        return unionSet;
+      }
+      //返回两个或更多集合的交集
+      static intersection(a, ...bSets) {
+        const intersectionSet = new XSet(a);
+        for (const aValue of intersectionSet) {
+          for (const b of bSets) {
+            if (!b.has(aValue)) {
+              intersectionSet.delete(aValue);
+            }
+          }
+        }
+        return intersectionSet;
+      }
+      //返回两个集合的差集
+      static difference(a, b) {
+        const differenceSet = new XSet(a);
+        for (const bValue of b) {
+          if (a.has(bValue)) {
+            differenceSet.delete(bValue);
+          }
+        }
+        return differenceSet;
+      }
+      //返回两个集合的对称差集
+      static symmertricDifference(a, b) {
+        //按照定义，对称差集可以表达为
+        return a.union(b).difference(a.intersection(b));
+      }
+      //返回两个集合（数组对形式）的笛卡儿积
+      //必须返回数组集合，因为笛卡儿积可能包含相同值的对
+      static cartesianProduct(a, b) {
+        const cartesianProductSet = new XSet();
+        for (const aValue of a) {
+          for (const bValue of b) {
+            cartesianProductSet.add([aValue, bValue]);
+          }
+        }
+        return cartesianProductSet;
+      }
+      //返回一个集合的幂集
+      static powerSet(a) {
+        const powerSet = new XSet().add(new XSet());
+        for (const aValue of a) {
+          for (const set of new XSet(powerSet)) {
+            powerSet.add(new XSet(set).add(aValue));
+          }
+        }
+        return powerSet;
+      }
+    } */
+  </script>
+</html>

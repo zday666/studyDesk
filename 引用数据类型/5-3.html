@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+  <script>
+    /* let message = "ab😊de";
+        console.log(message.codePointAt(1)); // 98
+        console.log(message.codePointAt(2)); // 128522
+        console.log(message.codePointAt(3)); // 56842
+        console.log(message.codePointAt(4)); // 100
+        console.log(String.fromCharCode(97, 98, 55357, 56842, 100, 101)); // ab😊de
+        console.log(String.fromCodePoint(97, 98, 128522, 100, 101)); // ab😊de */
+
+    /* ---------------------normalize()方法------------------------- */
+    // U+00C5：上面带圆圈的大写拉丁字母 A
+    /* console.log(String.fromCharCode(0x00c5)); // Å
+    // U+212B：长度单位“埃”
+    console.log(String.fromCharCode(0x212b)); // Å
+    // U+004：大写拉丁字母 A
+    // U+030A：上面加个圆圈
+    console.log(String.fromCharCode(0x0041, 0x030a)); // Å
+    let a1 = String.fromCharCode(0x00c5),
+      a2 = String.fromCharCode(0x212b),
+      a3 = String.fromCharCode(0x0041, 0x030a);
+    // U+00C5 是对 0+212B 进行 NFC/NFKC 规范化之后的结果
+    console.log(a1 === a1.normalize("NFD")); // false
+    console.log(a1 === a1.normalize("NFC")); // true
+    console.log(a1 === a1.normalize("NFKD")); // false
+    console.log(a1 === a1.normalize("NFKC")); // true
+    // U+212B 是未规范化的
+    console.log(a2 === a2.normalize("NFD")); // false
+    console.log(a2 === a2.normalize("NFC")); // false
+    console.log(a2 === a2.normalize("NFKD")); // false
+    console.log(a2 === a2.normalize("NFKC")); // false
+    // U+0041/U+030A 是对 0+212B 进行 NFD/NFKD 规范化之后的结果
+    console.log(a3 === a3.normalize("NFD")); // true
+    console.log(a3 === a3.normalize("NFC")); // false
+    console.log(a3 === a3.normalize("NFKD")); // true
+    console.log(a3 === a3.normalize("NFKC")); // false */
+    //选择同一种规范化形式可以让比较操作符返回正确的结果：
+    /* let a1 = String.fromCharCode(0x00c5),
+      a2 = String.fromCharCode(0x212b),
+      a3 = String.fromCharCode(0x0041, 0x030a);
+    console.log(a1.normalize("NFD") === a2.normalize("NFD")); // true
+    console.log(a2.normalize("NFKC") === a3.normalize("NFKC")); // true
+    console.log(a1.normalize("NFC") === a3.normalize("NFC")); // true */
+
+    /* let stringValue = "na ";
+    console.log(stringValue.repeat(16) + "batman");
+    // na na na na na na na na na na na na na na na na batman
+    console.log(stringValue); //na */
+
+    /* let text = "cat, bat, sat, fat";
+    let result = text.replace("at", "ond");
+    console.log(result); // "cond, bat, sat, fat"
+    result = text.replace(/at/g, "ond");
+    console.log(result); // "cond, bond, sond, fond" */
+
+    /* function displayInfo(args) {
+      let output = "";
+      if (typeof args.name == "string") {
+        output += "Name: " + args.name + "\n";
+      }
+      if (typeof args.age == "number") {
+        output += "Age: " + args.age + "\n";
+      }
+      alert(output);
+    }
+    displayInfo({
+      name: "Nicholas",
+      age: 29,
+    });
+    displayInfo({
+      name: "Greg",
+    }); */
+
+    // 可以使用 from()将集合和映射转换为一个新数组
+    /* const m = new Map().set(1, 2).set(3, 4);
+    const s = new Set().add(1).add(2).add(3).add(4);
+    console.log(Array.from(m)); // [[1, 2], [3, 4]]
+    console.log(m); // [[1, 2], [3, 4]]
+    console.log(Array.from(s)); // [1, 2, 3, 4]
+    console.log(s); // [1, 2, 3, 4] */
+
+    /* const a = ["foo", "bar", "baz", "qux"];
+    // 因为这些方法都返回迭代器，所以可以将它们的内容
+    // 通过 Array.from()直接转换为数组实例
+    const aKeys = Array.from(a.keys());
+    const aValues = Array.from(a.values());
+    const aEntries = Array.from(a.entries());
+    console.log(aKeys); // [0, 1, 2, 3]
+    console.log(aValues); // ["foo", "bar", "baz", "qux"]
+    console.log(aEntries); // [[0, "foo"], [1, "bar"], [2, "baz"], [3, "qux"]] */
+
+    /* let numbers = [1, 2, 3, 4, 5, 4, 3, 2, 1];
+    alert(numbers.indexOf(4)); // 3
+    alert(numbers.lastIndexOf(4)); // 5
+    alert(numbers.includes(4)); // true
+    alert(numbers.indexOf(4, 4)); // 5
+    alert(numbers.lastIndexOf(4, 4)); // 3
+    alert(numbers.includes(4, 7)); // false
+    alert(numbers.includes(4, 4)); // true */
+
+    /* let values = [1, 2, 3, 4, 5];
+    let sum = values.reduceRight((prev, cur, index, array) => prev - cur);
+    alert(sum); // 15 */
+    /* const buf = new ArrayBuffer(6);
+    const view = new DataView(buf);
+    // 尝试读取部分超出缓冲范围的值
+    view.getInt32(4);
+    // RangeError
+    // 尝试读取超出缓冲范围的值
+    view.getInt32(8);
+    // RangeError
+    // 尝试读取超出缓冲范围的值
+    view.getInt32(-1);
+    // RangeError
+    // 尝试写入超出缓冲范围的值
+    view.setInt32(4, 123);
+    // RangeError */
+  </script>
+</html>

@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+  <script>
+    /* let arrowSum = (a, b) => {
+          return a + b;
+        };
+        let functionExpressionSum = function (a, b) {
+          return a + b;
+        };
+        console.log(arrowSum(5, 8)); //13
+        console.log(functionExpressionSum(5, 8)); //13 */
+    /* //嵌入函数
+        let ints = [1, 2, 3];
+        console.log(
+          ints.map(function (i) {
+            return i + 1;
+          })
+        ); // [2, 3, 4]
+        console.log(
+          ints.map((i) => {
+            return i + 1;
+          })
+        ); // [2, 3, 4] */
+
+    /*
+          ---------------------------------
+          2-函数名
+          ---------------------------------
+        */
+
+    /* //所有函数对象都会暴露一个只读的 name 属性，其中包含关于函数的信息
+        function foo() {}
+        let bar = function () {};
+        let baz = () => {};
+        console.log(foo.name);
+        console.log(bar.name);
+        console.log(baz.name);
+        console.log((() => {}).name);
+        console.log(foo.name); */
+    /* //如果函数是一个获取函数、设置函数，或者使用 bind()实例化，那么标识符前面会加上一个前缀
+        function foo() {}
+        console.log(foo.bind(null).name); // bound foo
+        let dog = {
+          years: 1,
+          get age() {
+            return this.years;
+          },
+          set age(newAge) {
+            this.years = newAge;
+          },
+        };
+        let propertyDescriptor = Object.getOwnPropertyDescriptor(dog, "age");
+        console.log(propertyDescriptor.get.name); // get age
+        console.log(propertyDescriptor.set.name); // set age */
+
+    /*
+          ---------------------------------
+          3-理解参数
+          ---------------------------------
+        */
+    /* //arguments访问
+        function sayHi(name, message) {
+          console.log("Hello " + name + ", " + message);
+        }
+        function sayHi() {
+          console.log("Hello " + arguments[0] + ", " + arguments[1]);
+        } */
+    /* //可以通过 arguments 对象的 length 属性检查传入的参数个数
+        function doAdd() {
+          if (arguments.length === 1) {
+            console.log(arguments[0] + 10);
+          } else if (arguments.length === 2) {
+            console.log(arguments[0] + arguments[1]);
+          }
+        }
+        doAdd(10); // 20
+        doAdd(20, 30); // 50
+        //arguments 对象可以跟命名参数一起使用 */
+    /* //箭头函数参数不能用arguments访问，只能使用定义的命名参数访问
+        function foo() {
+          console.log(arguments[0]);
+        }
+        foo(5); // 5
+        let bar = () => {
+          console.log(arguments[0]);
+        };
+        bar(5); // ReferenceError: arguments is not defined */
+    /* //可在包装函数中把他提供给箭头函数
+        function foo() {
+          let bar = () => {
+            console.log(arguments[0]); //5
+          };
+          bar();
+        }
+        foo(5); */
+
+    /*
+          ---------------------------------
+          4-没有重载
+          ---------------------------------
+        */
+
+    /* //定义了两个同名函数，则后定义的会覆盖先定义的
+        function addSomeNumber(num) {
+          console.log((num += 100));
+        }
+        function addSomeNumber(num) {
+          console.log((num += 1200));
+        }
+        let result = addSomeNumber(100); // 1300 */
+
+    /*
+          ---------------------------------
+          5-默认参数值
+          ---------------------------------
+        */
+
+    /* function makeKing(name) {
+          name = typeof name !== "undefined" ? name : "Henry";
+          return `King ${name} VIII`;
+        }
+        console.log(makeKing()); // 'King Henry VIII'
+        console.log(makeKing("Louis")); // 'King Louis VIII'
+        //ES6语法：更简单
+        function makeKing(name = "Henry") {
+          return `King ${name} VIII`;
+        }
+        console.log(makeKing("Louis")); // 'King Louis VIII'
+        console.log(makeKing()); // 'King Henry VIII'
+        //给参数传 undefined 相当于没有传值，不过这样可以利用多个独立的默认值：
+        function makeKing(name = "Henry", numerals = "VIII") {
+          return `King ${name} ${numerals}`;
+        }
+        console.log(makeKing()); // 'King Henry VIII'
+        console.log(makeKing("Louis")); // 'King Louis VIII'
+        console.log(makeKing(undefined, "VI")); // 'King Henry VI' */
+    /* //在使用默认参数时，arguments 对象的值不反映参数的默认值，只反映传给函数的参数。当然，
+        // 跟 ES5 严格模式一样，修改命名参数也不会影响 arguments 对象，它始终以调用函数时传入的值为准
+        function makeKing(name = "Henry") {
+          name = "Louis";
+          return `King ${arguments[0]}`;
+        }
+        console.log(makeKing()); // 'King undefined'
+        console.log(makeKing("xixi")); // 'King xixi' */
+    /* //默认参数值并不限于原始值或对象类型，也可以使用调用函数返回的值
+        let romannumerals = ["I", "II", "III", "IV", "V", "VI"];
+        let ordinality = 0;
+        function getNumerals() {
+          //每次调用后递增
+          return romannumerals[ordinality++];
+        }
+        function makeKing(name = "Henry", numerals = getNumerals()) {
+          return `King ${name} ${numerals}`;
+        }
+        console.log(makeKing()); // 'King Henry I'
+        console.log(makeKing("Louis", "XVI")); // 'King Louis XVI'
+        console.log(makeKing()); // 'King Henry II'
+        console.log(makeKing()); // 'King Henry III' */
+    /* //默认参数作用域与暂时性死区
+        //前面定义的参数不能引用后面定义的
+        // 调用时不传第一个参数会报错
+        function makeKing(name = numerals, numerals = "VIII") {
+          return `King ${name} ${numerals}`;
+        }
+        // 调用时不传第二个参数会报错
+        function makeKing(name = "Henry", numerals = defaultNumeral) {
+          let defaultNumeral = "VIII";
+          return `King ${name} ${numerals}`;
+        } */
+
+    /*
+          ---------------------------------
+          6-参数扩展与收集
+          ---------------------------------
+        */
+
+    /*
+        //6.1扩展函数
+        let values = [1, 2, 3, 4];
+        function getSum() {
+          let sum = 0;
+          for (let i = 0; i < arguments.length; ++i) {
+            sum += arguments[i];
+          }
+          return sum;
+        }
+        console.log(getSum.apply(null, values)); // 10
+        //ES6中
+        console.log(getSum(...values)); // 10
+        console.log(getSum(-1, ...values)); // 9
+        console.log(getSum(...values, 5)); // 15
+        console.log(getSum(-1, ...values, 5)); // 14
+        console.log(getSum(...values, ...[5, 6, 7])); // 28
+         */
+
+    //6.2收集参数
+    /* function getSum(...values) {
+          //顺序累加values中的所有值
+          //初始值的总和为0
+          return values.reduce((x, y) => x + y, 0);
+        }
+        console.log(getSum(1, 2, 3)); //6
+        // 不可以
+        function getProduct(...values, lastValue) {}
+        // 可以
+        function ignoreFirst(firstValue, ...values) {
+        console.log(values);
+        }
+        ignoreFirst(); // []
+        ignoreFirst(1); // []
+        ignoreFirst(1,2); // [2]
+        ignoreFirst(1,2,3); // [2, 3] */
+    /* //箭头函数虽然不支持arguments对象，但支持收集参数的定义方式
+        //因此也可以实现与使用arguments一样的逻辑
+        let getSum = (...values) => {
+          return values.reduce((x, y) => x + y, 0);
+        };
+        console.log(getSum(1, 2, 3)); // 6
+         */
+    /* //使用收集参数并不影响 arguments 对象，它仍然反映调用时传给函数的参数
+        function getSum(...values) {
+          console.log(arguments.length); // 3
+          console.log(arguments); // [1, 2, 3]
+          console.log(values); // [1, 2, 3]
+        }
+        console.log(getSum(1, 2, 3)); */
+
+    /*
+          ---------------------------------
+          7-函数声明与函数表达式
+          ---------------------------------
+        */
+
+    /* //没问题
+        console.log(sum(10, 10));
+        function sum(num1, num2) {
+          return num1 + num2;
+        } */
+    /* // 会出错
+        console.log(sum(10, 10));
+        let sum = function (num1, num2) {
+          return num1 + num2;
+        }; */
+
+    /*
+          ---------------------------------
+          8-函数作为值
+          ---------------------------------
+        */
+
+    /* function callSomeFunction(someFunction, someArgument) {
+          return someFunction(someArgument);
+        }
+        function add10(num) {
+          return num + 10;
+        }
+        let result1 = callSomeFunction(add10, 10);
+        console.log(result1); // 20
+        function getGreeting(name) {
+          return "Hello, " + name;
+        }
+        let result2 = callSomeFunction(getGreeting, "Nicholas");
+        console.log(result2); //"Hello, Nicholas" */
+    /* function createComparisonFunction(propertyName) {
+          return function (object1, object2) {
+            let value1 = object1[propertyName],
+              value2 = object2[propertyName];
+            if (value1 < value2) {
+              return -1;
+            } else if (value1 > value2) {
+              return 1;
+            } else {
+              return 0;
+            }
+          };
+        }
+        let data = [
+          { name: "Zachary", age: 28 },
+          { name: "Nicholas", age: 29 },
+        ];
+        data.sort(createComparisonFunction("name"));
+        console.log(data[0].name); // Nicholas
+        data.sort(createComparisonFunction("age"));
+        console.log(data[0].name); // Zachary */
+
+    /*
+          ---------------------------------
+          9-函数内部
+          ---------------------------------
+        */
+
+    /* //9.1  arguments
+        function factorial(num) {
+          if (num <= 1) {
+            return 1;
+          } else {
+            return num * factorial(num - 1);
+          }
+        }
+        //这个函数要正确执行就必须保证函数名是 factorial，从而导致
+        // 了紧密耦合。使用 arguments.callee 就可以让函数逻辑与函数名解耦
+        function factorial(num) {
+          if (num <= 1) {
+            return 1;
+          } else {
+            return num * arguments.callee(num - 1);
+          }
+        }
+        let trueFactorial = factorial;
+        factorial = function () {
+          return 0;
+        };
+        console.log(trueFactorial(5)); // 120
+        console.log(factorial(5)); // 0 */
+
+    //9.2 this
+    /* window.color = "red";
+        let o = {
+          color: "blue",
+        };
+        function sayColor() {
+          console.log(this.color);
+        }
+        sayColor(); // red
+        o.sayColor = sayColor;
+        o.sayColor(); // blue */
+    /*  //在事件回调或定时回调中调用某个函数时，this 值指向的并非想要的对象。此时将
+        // 回调函数写成箭头函数就可以解决问题。这是因为箭头函数中的 this 会保留定义该函数时的上下文
+        function King() {
+          this.royaltyName = "Henry";
+          //this 引用King的实例
+          setTimeout(() => console.log(this.royaltyName), 1000);
+        }
+        function Queen() {
+          this.royaltyName = "Elizabeth";
+          //this引用window对象
+          setTimeout(function () {
+            console.log(this.royaltyName);
+          }, 1000);
+        }
+        new King(); // Henry
+        new Queen(); // undefined */
+    //--------------------9.3 caller
+    /* //属性引用的是调用当前函数的函数
+        function outer() {
+          inner();
+        }
+        function inner() {
+          console.log(inner.caller);
+        }
+        outer(); */
+    /* //要降低耦合度，则可以通过 arguments.callee.caller 来引用同样的值
+        function outer() {
+          inner();
+        }
+        function inner() {
+          console.log(arguments.callee.caller);
+        }
+        outer(); */
+    //-----------------------9.4 new.target
+    /* //函数是正常调用的,则 new.target 的值是 undefined；
+        //如果是使用 new 关键字调用的，则 new.target 将引用被调用的构造函数
+        function King() {
+          console.log(new.target);
+          if (!new.target) {
+            throw 'King must be instantiated using "new"';
+          }
+          console.log('King instantiated sing "new"');
+        }
+        new King(); //King instantiated sing "new"
+        King(); // Error: King must be instantiated using "new" */
+
+    /*
+          ---------------------------------
+          10-函数属性与方法
+          ---------------------------------
+        */
+
+    /* //length 属性保存函数定义的命名参数的个数
+        function sayName(name) {
+          console.log(name);
+        }
+        function sum(num1, num2) {
+          return num1 + num2;
+        }
+        function sayHi() {
+          console.log("hi");
+        }
+        console.log(sayName.length); // 1
+        console.log(sum.length); // 2
+        console.log(sayHi.length); // 0  */
+
+    //prototype是不可枚举的，因此使用for-in循环不会返回这个属性
+
+    /* //函数还有两个方法：apply()和call()。以指定的this值来调用函数，即会设置调用函数时函数体内this对象的值
+        //apply()方法接收两个参数：函数内this的值和一个参数数组。
+        //第二个参数可以是Array的实例，也可是arguments对象
+        function sum(num1, num2) {
+          return num1 + num2;
+        }
+        function callSum1(num1, num2) {
+          return sum.apply(this, arguments); // 传入arguments对象
+        }
+        function callSum2(num1, num2) {
+          return sum.apply(this, [num1, num2]); // 传入数组
+        }
+        console.log(callSum1(10, 10)); // 20
+        console.log(callSum2(10, 10)); // 20 */
+
+    /* //call()向函数传参时，必须将参数一个一个的列出来
+        function sum(num1, num2) {
+          return num1 + num2;
+        }
+        function callSum1(num1, num2) {
+          return sum.call(this, ...arguments);
+        }
+        function callSum(num1, num2) {
+          return sum.call(this, num1, num2);
+        }
+        console.log(callSum(10, 10)); // 20
+        console.log(callSum1(10, 10)); // 20 */
+
+    /* window.color = "red";
+        let o = {
+          color: "blue",
+        };
+        function sayColor() {
+          console.log(this.color);
+        }
+        sayColor(); // red
+        sayColor.call(this); //red
+        sayColor.call(window); //red
+        sayColor.call(o); //blue */
+    /* // bind()方法会创建一个新的函数实例，其 this 值会被绑定到传给 bind()的对象
+        window.color = "red";
+        let o = {
+          color: "blue",
+        };
+        function sayColor() {
+          console.log(this.color);
+        }
+        let objectSayColor = sayColor.bind(o);
+        objectSayColor(); // blue */
+
+    /*
+          ---------------------------------
+          11-函数表达式
+          ---------------------------------
+        */
+
+    //定义函数两种方式：1、函数声明 2、函数表达式
+    /* //函数声明
+        function functionName(arg0, arg1, arg2) {
+          //函数体
+        }
+        //关键特点：函数声明提升---->意味着函数声明可出现在调用它的代码之后
+        sayHi();
+        function sayHi() {
+          console.log("Hi!");
+        } */
+    //----函数表达式
+    /* let functionName = function (arg0, arg1, arg2) {
+          //函数体
+        };
+        //先赋值再使用
+        sayHi(); // Error! function doesn't exist yet
+        let sayHi = function () {
+          console.log("Hi!");
+        }; */
+    //千万别这样做！！！！
+    /* if (condition) {
+          function sayHi() {
+            console.log("Hi!");
+          }
+        } else {
+          function sayHi() {
+            console.log("Yo!");
+          }
+        } */
+    //换成函数表达式就没问题
+    /* //没问题
+        let sayHi;
+        if (condition) {
+          sayHi = function () {
+            console.log("Hi!");
+          };
+        } else {
+          sayHi = function () {
+            console.log("Yo!");
+          };
+        }
+        //在函数中返回另一个函数当作值返回
+        function createComparisonFunction(propertyName) {
+          return function (object1, object2) {
+            let value1 = object1[propertyName];
+            let value2 = object2[propertyName];
+            if (value1 < value2) {
+              return -1;
+            } else if (value1 > value2) {
+              return 1;
+            } else {
+              return 0;
+            }
+          };
+        } */
+
+    /*
+          ---------------------------------
+          12-递归
+          ---------------------------------
+        */
+
+    /* //递归函数通常形式是一个函数通过名称调用自己
+        function factorial(num) {
+          if (num <= 1) {
+            return 1;
+          } else {
+            return num * factorial(num - 1);
+          }
+        }
+        //但是如果把这个函数赋值给其他变量，就会出问题：
+        let anotherFactorial = factorial;
+        factorial = null;
+        console.log(anotherFactorial(4)); // 报错 */
+
+    /* //arguments.callee指向正在执行的函数的指针,可在函数内部递归调用
+        function factorial(num) {
+          if (num <= 1) {
+            return 1;
+          } else {
+            return num * arguments.callee(num - 1);
+          }
+        }
+        let anotherFactorial = factorial;
+        factorial = null;
+        console.log(anotherFactorial(4)); // 24
+        //在严格模式下运行的代码不能访问arguments.callee，因为访问会出错 */
+
+    /* //可使用命名函数表达式（named function expression）
+        let factorial = function f(num) {
+          if (num <= 1) {
+            return 1;
+          } else {
+            return num * f(num - 1);
+          }
+        };
+        let anotherFactorial = factorial;
+        factorial = null;
+        console.log(anotherFactorial(4)); // 24*/
+
+    /*
+          ---------------------------------
+          13-尾调用优化
+          ---------------------------------
+        */
+
+    /* //尾调用：外部函数的返回值是一个内部函数的返回值
+    function outerFunction() {
+      return innerFunction(); // 尾调用
+    }
+    //----------------ES6优化前，执行这个例子内存中发生如下操作
+    //(1) 执行到 outerFunction 函数体，第一个栈帧被推到栈上。
+    //(2) 执行 outerFunction 函数体，到 return 语句。计算返回值必须先计算 innerFunction。
+    //(3) 执行到 innerFunction 函数体，第二个栈帧被推到栈上。
+    //(4) 执行 innerFunction 函数体，计算其返回值。
+    //(5) 将返回值传回 outerFunction，然后 outerFunction 再返回值。
+    //(6) 将栈帧弹出栈外
+    //----------------ES6 优化之后，执行这个例子会在内存中发生如下操作。
+    // (1) 执行到 outerFunction 函数体，第一个栈帧被推到栈上。
+    // (2) 执行 outerFunction 函数体，到达 return 语句。为求值返回语句，必须先求值 innerFunction。
+    // (3) 引擎发现把第一个栈帧弹出栈外也没问题，因为 innerFunction 的返回值也是 outerFunction
+    // 的返回值。
+    // (4) 弹出 outerFunction 的栈帧。
+    // (5) 执行到 innerFunction 函数体，栈帧被推到栈上。
+    // (6) 执行 innerFunction 函数体，计算其返回值。
+    // (7) 将 innerFunction 的栈帧弹出栈外。*/
+
+    // ---------13.1  尾调用优化的条件
+    //：：：：确定外部栈帧没有必要存在了
+    //涉及条件：1、代码在严格模式下执行；2、外部函数返回值是对尾调用函数的调用；
+    //3、尾调用函数返回后不需要执行额外的逻辑；4、尾调用函数不是引用外部函数作用域中中自由变量的闭包
+    /* "use strict";
+    //无优化：尾调用没有返回
+    function outerFunction() {
+      innerFunction();
+    }
+    //无优化：尾调用没有直接返回
+    function outerFunction() {
+      let innerFunctionResult = innerFunction();
+      return innerFunctionResult;
+    }
+    //无优化：尾调用返回后必须转型为字符串
+    function outerFunction() {
+      return innerFunction().toString();
+    }
+    //无优化：尾调用是一个闭包
+    function outerFunction() {
+      let foo = "bar";
+      function innerFunction() {
+        return foo;
+      }
+      return innerFunction();
+    }
+    //以上都不符合尾调用优化要求 */
+    //以下是几个符合尾调用优化条件的例子
+    /* "use strict";
+    //有优化：栈帧销毁前执行参数计算
+    function outerFunction(a, b) {
+      return innerFunction(a + b);
+    }
+    //有优化：初始返回值不涉及栈帧
+    function outerFunction(a, b) {
+      if (a < b) {
+        return a;
+      }
+      return innerFunction(a + b);
+    }
+    //有优化：两个内部函数都在尾部
+    function outerFunction(condition) {
+      return condition ? innerFunctionA() : innerFunctionB();
+    } */
+
+    // -----------13.2 尾调用优化的代码
+    /* function fib(n) {
+      if (n < 2) {
+        return n;
+      }
+      return fib(n - 1) + fib(n - 2);
+    }
+    console.log(fib(0)); // 0
+    console.log(fib(1)); // 1
+    console.log(fib(2)); // 1
+    console.log(fib(3)); // 2
+    console.log(fib(4)); // 3
+    console.log(fib(5)); // 5
+    console.log(fib(6)); // 8 */
+
+    /* //fib(n)的栈帧数的内存复杂度是O(n个2).即使这么简单调用也可给浏览器带来麻烦
+    //解决方案：将递归改写成迭代循环形式。也可保持递归实现，但将其重构为满足优化条件的形式，
+    //为此可使用两个嵌套的函数，外部函数作为基础框架，内部函数执行递归
+    ("use strict");
+    //基础框架
+    function fib(n) {
+      return fibTmpl(0, 1, n);
+    }
+    function fibTmpl(a, b, n) {
+      if (n === 0) {
+        return a;
+      }
+      return fibTmpl(b, a + b, n - 1);
+    }
+    console.log(fib(1000)); */
+
+    /*
+          ---------------------------------
+          14-闭包
+          ---------------------------------
+        */
+
+    //闭包：引用另一个函数作用域中变量的函数，通常在嵌套函数中实现的。
+    /* function createComparisonFunction(propertyName) {
+      return function (object1, object2) {
+        let value1 = object1[propertyName]; // ****
+        let value2 = object2[propertyName]; // ****
+        if (value1 < value2) {
+          return -1;
+        } else if (value1 > value2) {
+          return 1;
+        } else {
+          return 0;
+        }
+      };
+    }
+    //标****代码位于内部函数（匿名函数）中，其中引用了外部函数的变量propertyName.
+    //在这个内部函数被返回并在其他地方被使用后，他仍然引用着那个变量
+    function compare(value1, value2) {
+      if (value1 < value2) {
+        return -1;
+      } else if (value1 > value2) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+    let result = compare(5, 10); */
+
+    //---------------14.1 this对象
+    /* window.identity = "The Window";
+    let object = {
+      identity: "My Object",
+      getIdentityFunc() {
+        return function () {
+          return this.identity;
+        };
+      },
+    };
+    console.log(object.getIdentityFunc()()); // 'The Window' */
+    /* //内部函数永远不可能直接访问外部函数的这两个变量(this,arguments)
+    //解决方案
+    window.identity = "The Window";
+    let object = {
+      identity: "My Object",
+      getIdentityFunc() {
+        let that = this; //****
+        return function () {
+          return that.identity; //****
+        };
+      },
+    };
+    console.log(object.getIdentityFunc()()); // 'My Object' */
+
+    /* window.identity = "The Window";
+    let object = {
+      identity: "My Object",
+      getIdentity() {
+        return this.identity;
+      },
+    };
+    console.log(object.getIdentity()); // 'My Object'
+    console.log(object.getIdentity()); // 'My Object'
+    console.log((object.getIdentity = object.getIdentity)()); // 'The Window'
+    //赋值表达式的值是函数本身，this 值不再与任何对象绑定，所以返回的是"The Window" */
+
+    //----------------14.2 内存泄漏
+    
+  </script>
+</html>

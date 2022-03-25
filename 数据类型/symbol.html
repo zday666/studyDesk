@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+  <script>
+    //Symbol.asyncIterator
+    // const request = require("request");
+    /*class Foo {
+      async *[Symbol.asyncIterator]() {}
+    }
+    let f = new Foo();
+    console.log(f[Symbol.asyncIterator]());*/
+
+    /*class Emitter {
+      constructor(max) {
+        this.max = max;
+        this.asyncIdx = 0;
+      }
+      async *[Symbol.asyncIterator]() {
+        while (this.asyncIdx < this.max) {
+          yield new Promise((reslove) => resolve(this.asyncIdx++));
+        }
+      }
+    }
+    async function asyncCount() {
+      let emitter = new Emitter(5);
+      for await (const x of emitter) {
+        console.log(x);
+      }
+    }
+    asyncCount();*/
+
+    /* function Foo() {}
+    let f = new Foo();
+    console.log(f instanceof Foo); //true
+    console.log(Foo[Symbol.hasInstance](f)); //true
+    class Bar {}
+    class Baz extends Bar {
+      static [Symbol.hasInstance]() {
+        return false;
+      }
+    }
+    let b = new Baz();
+    console.log(Bar[Symbol.hasInstance](b)); //true
+    console.log(Baz[Symbol.hasInstance](b)); //false */
+
+    //-------------Symbol.isConcatSpreadable-----------------
+
+    //     let initial = ["foo"];
+    //     let arrayLikeObject = { length: 1, 0: "baz" };
+    //     let otherObject = new Set().add("qux");
+    //     let array = ["bar"];
+    //     /* console.log(array[Symbol.isConcatSpreadable]); //undefined
+    //     console.log(initial.concat(array)); // ['foo', 'bar']
+
+    //     array[Symbol.isConcatSpreadable] = false;
+    //     console.log(initial.concat(array)); // ['foo', Array(1)]
+    //     array[Symbol.isConcatSpreadable] = true;
+    //     console.log(initial.concat(array)); // ['foo', 'bar'] */
+
+    //     /* console.log(arrayLikeObject[Symbol.isConcatSpreadable]); //undefined
+    //     console.log(initial.concat(arrayLikeObject)); // ['foo', {…}]
+
+    //     arrayLikeObject[Symbol.isConcatSpreadable] = false;
+    //     console.log(initial.concat(arrayLikeObject)); // ['foo', {…}]
+    //     arrayLikeObject[Symbol.isConcatSpreadable] = true;
+    //     console.log(initial.concat(arrayLikeObject)); // ['foo', 'baz'] */
+
+    //     /* console.log(otherObject[Symbol.isConcatSpreadable]); //undefined
+    //     console.log(initial.concat(otherObject)); // ['foo', Set(1)]
+
+    //     otherObject[Symbol.isConcatSpreadable] = false;
+    //     console.log(initial.concat(otherObject)); // ['foo', Set(1)]
+    //     otherObject[Symbol.isConcatSpreadable] = true;
+    //     console.log(initial.concat(otherObject)); // ['foo'] */
+
+    //     /* 数组对象默认情况下会被打平到已有的数组，false 或假值会导致整个对象被追加到数组末尾。类
+    // 数组对象默认情况下会被追加到数组末尾，true 或真值会导致这个类数组对象被打平到数组实例。其
+    // 他不是类数组对象的对象在 Symbol.isConcatSpreadable 被设置为 true 的情况下将被忽略 */
+
+    //-------------Symbol.iterator迭代器-----------------
+    /* class Foo {
+      *[Symbol.iterator]() {}
+    }
+    let f = new Foo();
+    console.log(f[Symbol.iterator]());
+    class Emitter {
+      constructor(max) {
+        this.max = max;
+        this.idx = 0;
+      }
+      *[Symbol.iterator]() {
+        while (this.idx < this.max) {
+          yield this.idx++;
+        }
+      }
+    }
+    function count(x) {
+      let emitter = new Emitter(x);
+      for (const x of emitter) {
+        console.log(x);
+      }
+    }
+    count(10); */
+
+    //-----------------Symbol.match----------------------
+    /* console.log(RegExp.prototype[Symbol.match]);
+    // ƒ [Symbol.match]() { [native code] }
+    console.log("foobar".match(/bar/));
+    // ["bar", index: 3, input: "foobar", groups: undefined]
+    class FooMatcher {
+      static [Symbol.match](target) {
+        return target.includes("foo");
+      }
+    }
+    console.log("foobar".match(FooMatcher)); // true
+    console.log("barbaz".match(FooMatcher)); // false
+    class StringMatcher {
+      constructor(str) {
+        this.str = str;
+      }
+      [Symbol.match](target) {
+        return target.includes(this.str);
+      }
+    }
+    console.log("foobar".match(new StringMatcher("foo"))); // true
+    console.log("barbaz".match(new StringMatcher("qux"))); // false */
+
+    //-----------------Symbol.replace----------------------
+    /* console.log(RegExp.prototype[Symbol.replace]);
+    console.log("foobarbaz".replace(/bar/, "qux"));
+    // 'fooquxbaz'
+    class FooReplacer {
+      static [Symbol.replace](target, replacement) {
+        return target.split("foo").join(replacement);
+      }
+    }
+    console.log("barfoobaz".replace(FooReplacer, "qux"));
+    // "barquxbaz"
+    class StringReplacer {
+      constructor(str) {
+        this.str = str;
+      }
+      [Symbol.replace](target, replacement) {
+        return target.split(this.str).join(replacement);
+      }
+    }
+    console.log("barfoobaz".replace(new StringReplacer("foo"), "qux"));
+    // "barquxbaz" */
+
+    //-----------------Symbol.species定义静态的获取器（getter）方法，可以覆盖新创建实例得原型定义----------------------
+    /* class Bar extends Array {}
+    class Baz extends Array {
+      static get [Symbol.species]() {
+        return Array;
+      }
+    }
+    let bar = new Bar();
+    console.log(bar instanceof Array); // true
+    console.log(bar instanceof Bar); // true
+    bar = bar.concat("bar");
+    console.log(bar instanceof Array); // true
+    console.log(bar instanceof Bar); // true
+    let baz = new Baz();
+    console.log(baz instanceof Array); // true
+    console.log(baz instanceof Baz); // true
+    baz = baz.concat("baz");
+    console.log(baz instanceof Array); // true
+    console.log(baz instanceof Baz); // false */
+
+    //--------------Symbol.toPrimitive-----------------------
+    /* class Foo {}
+    let foo = new Foo();
+    console.log(3 + foo); // "3[object Object]"
+    console.log(3 - foo); // NaN
+    console.log(String(foo)); // "[object Object]"
+
+    class Bar {
+      constructor() {
+        this[Symbol.toPrimitive] = function (hint) {
+          switch (hint) {
+            case "number":
+              return 3;
+            case "string":
+              return "string bar";
+            case "default":
+            default:
+              return "default bar";
+          }
+        };
+      }
+    }
+    let bar = new Bar();
+    console.log(3 + bar); // "3default bar"
+    console.log(3 - bar); // 0
+    console.log(String(bar)); // "string bar" */
+
+    console.log(!!undefined)
+    console.log(!!NaN)
+    console.log(!!null)
+  </script>
+</html>
